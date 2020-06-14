@@ -5,7 +5,18 @@ const express = require("express");
 const router = express.Router();
 
 const notes = require ("../db/db.json");
-console.log(`loaded ${notes.length} notes`)
+if (!isArray(notes)) {
+    console.log("Error! notes should be an array, please check `db/db.json!`");
+    process.exit(1);
+}
+console.log(`loaded ${notes.length} notes`);
+
+function isObject(it) {
+    return typeof(it) === "object" && (!Array.isArray(it));
+}
+function isArray(it) {
+    return typeof(it) === "object" && (Array.isArray(it));
+}
 
 
 
@@ -18,7 +29,7 @@ router.post("/notes", function (request, response) {
     console.log("Got body:")
     console.log(data)
     
-    if (data.title && data.text 
+    if (isObject(data) && data.title && data.text 
             && typeof(data.title) === "string" 
             && typeof(data.text) === "string") {
         const note = {
@@ -28,15 +39,44 @@ router.post("/notes", function (request, response) {
         }
         notes[notes.length] = note;
 
-        fs.writeFileSync("./db/db.json", JSON.stringify(notes));
+        try {
+            fs.writeFileSync("./db/db.json", JSON.stringify(notes));
+        } catch (err) {
+            console.log("Could not save db.json:");
+            console.log(err);
+            response.statusCode = 500;
+            response.send("Error writing file, could not save note!");
+            return;
+        }
         
+        response.send("Success!")
+    } else {
+        response.statusCode = 400;
+        response.send("Error, bad data, could not save note!");
     }
     
-    response.send("Success!")
 })
 router.delete("/notes/:id", function (request, response) {
-    console.log("Response id:" + request.params.id);
-    response.send("Response id:" + request.params.id);
+    const id = request.params.id;
+
+    for (let i = 0; i < notes.length; i++) {
+        if (id === notes[i].id) {
+            notes.splice(i, 1);
+            try {
+                fs.writeFileSync("./db/db.json", JSON.stringify(notes));
+            } catch (err) {
+                console.log("Could not save db.json:");
+                console.log(err);
+                response.statusCode = 500;
+                response.send("Error writing file, could not delete note!");
+                return;
+            }
+            response.send("Success!");
+            return;
+        }
+    }
+    response.send("No note with matching id!")
+
     
 });
 

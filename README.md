@@ -1,5 +1,62 @@
 # Unit 11 Express Homework: Note Taker
 
+# Express Note Taker
+
+
+## Description
+
+an app to take notes
+
+## Table of Contents
+
+* [Installation](#installation)
+
+* [Usage](#usage)
+
+* [License](#license)
+
+* [Contributing](#contributing)
+
+* [test](#tests)
+
+* [Questions](#Questions)
+
+## Installation
+
+To install necessary dependencies run the following command:
+
+```
+npm i
+```
+
+## Usage
+
+just enjoy
+
+
+## License
+
+This project is not licensed.
+
+## Contributing
+
+none
+
+## Tests
+
+to run tests, run the following command:
+
+```
+none
+```
+
+## Questions
+
+If you have any questions about the repository, open an issue or contact [bgartdu](undefined) directly at brandongart@gmail.com.
+
+
+
+
 ## Description
 
 Create an application that can be used to write, save, and delete notes. This application will use an express backend and save and retrieve note data from a JSON file.
